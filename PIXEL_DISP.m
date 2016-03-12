@@ -1,4 +1,4 @@
-function [ depthmap ] = PIXEL_DISP( image1, image2, support_location, support_size, search_location, search_size)
+function [ disp_map ] = PIXEL_DISP( image1, image2, support_location, support_size, search_location, search_size)
 %PIXEL_DISP compare depth of each pixel in a search window against the
 %given support_pixel and return a matrix of values.
 %Image 1 & 2 are the images
@@ -10,7 +10,7 @@ function [ depthmap ] = PIXEL_DISP( image1, image2, support_location, support_si
 
 halfSearch =  floor(search_size / 2);
 halfSupport = floor(support_size /2);
-depthmap = zeros(search_size, search_size);
+disp_map = zeros(search_size, search_size);
 map_x = 1;
 map_y = 1;
 
@@ -26,7 +26,7 @@ search_location(2) = search_location(2) + halfSupport;
 for x=(search_location(1) - halfSearch) : (search_location(1) + halfSearch)
     for y =(search_location(2) - halfSearch) : (search_location(2) + halfSearch);
         %call the support window comparison
-        depthmap(map_x, map_y) = SUPPORT_CMP(pImage1, pImage2, support_location, [x, y], support_size);
+        disp_map(map_x, map_y) = SUPPORT_CMP(pImage1, pImage2, support_location, [x, y], support_size);
         map_y = map_y + 1;
     end
     map_y = 1;
