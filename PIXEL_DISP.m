@@ -48,7 +48,7 @@ end
 for x=search_Xmin : search_Xmax
     for y =search_Ymin : search_Ymax
         %call the support window comparison
-        disp_map(map_x, map_y) = SUPPORT_CMP(pImage1, pImage2, support_location, [x, y], support_size);
+        disp_map(map_x, map_y) = SUPPORT_CMP(pImage1, pImage2, support_location, [x, y], halfSupport);
         map_y = map_y + 1;
     end
     map_y = 1;
