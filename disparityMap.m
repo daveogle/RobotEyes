@@ -22,7 +22,7 @@ function varargout = disparityMap(varargin)
 
 % Edit the above text to modify the response to help disparityMap
 
-% Last Modified by GUIDE v2.5 08-Mar-2016 12:17:23
+% Last Modified by GUIDE v2.5 11-Mar-2016 14:19:40
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -72,7 +72,7 @@ function varargout = disparityMap_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get default command line output from handles structure
-varargout{1} = handles.output;
+    varargout{1} = handles.output;
 end
 
 
@@ -274,32 +274,39 @@ function execute_Callback(hObject, eventdata, handles)
     
     newSize =  str2num(get(handles.imgSize,'string'));
     
-    left = resizeToMaxDim(left, newSize);
-    right = resizeToMaxDim(right, newSize);
+    [left, scale] = resizeToMaxDim(left, newSize);
+    [right, scale] = resizeToMaxDim(right, newSize);
     
     mode = get(handles.overallMethod,'value');
     if mode == 1
-        correlationWrapper(left, right, newSize);
+        correlationWrapper(left, right, newSize, handles);
     elseif mode == 2
-        featureWrapper(left, right, newSize);
+        featureWrapper(left, right, newSize, handles);
     end
     %figure, imshow(left);
     %figure, imshow(right);
     %size(left);
     %size(right);
+    guidata(hObject, handles);
 end
 
-function [resizedImg] = resizeToMaxDim(image, newSize)
-    [sizeX, sizeY] = size(image);
+function [resizedImg, inverseScale] = resizeToMaxDim(image, newSize)
+    [scale, inverseScale] = calculateScale(image, newSize);
+    resizedImg = imresize(image, scale);    
+end
+
+function [scale, inverseScale] = calculateScale(image, newSize)
+    [sizeY, sizeX, sizeZ] = size(image);
     if  sizeX >= sizeY
         scale = newSize/sizeX;
+        inverseScale = sizeX/newSize;
     else
         scale = newSize/sizeY;
+        inverseScale = sizeY/newSize;
     end
-    resizedImg = imresize(image, scale);
 end
 
-function [] = correlationWrapper(leftImg, rightImg, size)
+function [] = correlationWrapper(leftImg, rightImg, size, handles)
     supportWinSize = str2num(get(handles.supportWinSize,'string'));
     searchWinSize = str2num(get(handles.searchWinSize,'string'));
     simMetric = get(handles.similiarityMetric, 'Value');
@@ -308,8 +315,118 @@ function [] = correlationWrapper(leftImg, rightImg, size)
     R = rightImg;
 end
 
-function [] = featureWrapper(leftImg, rightImg, size)
+function [] = featureWrapper(leftImg, rightImg, size, handles)
     featureChoice = get(handles.featureChoice, 'Value');
     L = leftImg;
     R = rightImg;
+end
+
+
+
+function baseline_Callback(hObject, eventdata, handles)
+% hObject    handle to baseline (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of baseline as text
+%        str2double(get(hObject,'String')) returns contents of baseline as a double
+end
+
+% --- Executes during object creation, after setting all properties.
+function baseline_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to baseline (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+    if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+        set(hObject,'BackgroundColor','white');
+    end
+end
+
+
+function focalLength_Callback(hObject, eventdata, handles)
+% hObject    handle to focalLength (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of focalLength as text
+%        str2double(get(hObject,'String')) returns contents of focalLength as a double
+end
+
+% --- Executes during object creation, after setting all properties.
+function focalLength_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to focalLength (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+    if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+        set(hObject,'BackgroundColor','white');
+    end
+end
+
+
+function dpi_Callback(hObject, eventdata, handles)
+% hObject    handle to dpi (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of dpi as text
+%        str2double(get(hObject,'String')) returns contents of dpi as a double
+end
+
+% --- Executes during object creation, after setting all properties.
+function dpi_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to dpi (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+    if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+        set(hObject,'BackgroundColor','white');
+    end
+end
+
+
+function minDist_Callback(hObject, eventdata, handles)
+% hObject    handle to minDist (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of minDist as text
+%        str2double(get(hObject,'String')) returns contents of minDist as a double
+end
+
+% --- Executes during object creation, after setting all properties.
+function minDist_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to minDist (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+end
+
+% --- Executes on button press in calculateWinSize.
+function calculateWinSize_Callback(hObject, eventdata, handles)
+% hObject    handle to calculateWinSize (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    baseline = str2num(get(handles.baseline,'string'));
+    focalLength = str2num(get(handles.focalLength,'string'));
+    dpi = str2num(get(handles.dpi,'string'));
+    minDist = str2num(get(handles.minDist,'string'));
+    newSize =  str2num(get(handles.imgSize,'string'));
+    [scale, inverseScale] = calculateScale(handles.leftImage, newSize);
+    error = mmToPixels(5, dpi);
+    suggestedSize = windowSizeCalc(baseline, focalLength, minDist, dpi, inverseScale) + error;
+    set(handles.suggestedSearchWin, 'String', num2str(suggestedSize));
+    guidata(hObject, handles);
 end
