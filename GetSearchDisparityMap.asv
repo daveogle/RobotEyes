@@ -1,22 +1,22 @@
-function [ cost ] = GetSearchDisparityMap( image1, image2, support_center, support_size, search_size )
+function [ result ] = GetSearchDisparityMap( image1, image2, support_center, support_size, search_size )
     
     halfSupport = floor(support_size /2);
     halfSearch =  floor(search_size / 2);
 
 
     %pad the images with the size of the support window
-    pImage1 = padarray(image1, [halfSupport halfSupport], 0, 'both');
-    pImage2 = padarray(image2, [halfSupport halfSupport], 0, 'both');
+    %pImage1 = padarray(image1, [halfSupport halfSupport], 0, 'both');
+    %pImage2 = padarray(image2, [halfSupport halfSupport], 0, 'both');
     [imageBoundX, imageBoundY,z] = size(image1);
 
-    %disp_map = zeros(search_size, search_size);
     cost = cell(imageBoundX, imageBoundY);
+    disp_map = zeros(imageBoundX, imageBoundY);
     map_x = 1;
     map_y = 1;
 
     %compensate for padding
-    support_center(1) = support_center(1) + halfSupport;
-    support_center(2) = support_center(2) + halfSupport;
+    %support_center(1) = support_center(1) + halfSupport;
+    %support_center(2) = support_center(2) + halfSupport;
 
     %adjust search window size to account for OOBX
     search_Xmin = support_center(1) - halfSearch;
@@ -37,16 +37,16 @@ function [ cost ] = GetSearchDisparityMap( image1, image2, support_center, suppo
         search_Ymax = (imageBoundY - halfSupport);
     end
     
-    minW = -halfSearch;
-    W = halfSearch;
-    dist = zeros(imageBoundX, imageBoundY);
+    minW = search_Xmin;%-halfSearch;
+    W = search_Xmax;%halfSearch;
+    
     %for each pixel in the search window (for OFF exists in Offsets)
     for i = minW : W
         for j = minW : W
             for x = 1 : imageBoundX
                 for y = 1 : imageBoundY
                     if (x+i > 0 && y+j > 0) && (x+i <= imageBoundX && y+j <= imageBoundY)
-                        dist(x,y) = SSD(image1(x,y), image2(x+i, y+j)); 
+                        disp_map(x,y) = SSD(image1(x,y), image2(x+i, y+j)); 
                     end
                 end
             end
@@ -70,7 +70,8 @@ function [ cost ] = GetSearchDisparityMap( image1, image2, support_center, suppo
         map_y = 1;
         map_x = map_x + 1;
     end
-    %image(disp_map)
-    
+    result = extractDimension(cost);
+    figure
+    imshow(result);
 end
 
