@@ -7,7 +7,6 @@ function [ result ] = GetSearchDisparityMap( image1, image2, support_size, searc
     minW = -halfSearch;
     W = halfSearch;
     
-    %for each pixel in the search window (for OFF exists in Offsets)
     for i = minW : W
         for j = minW : W
             for x = 1 : imageBoundX
