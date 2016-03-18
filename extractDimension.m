@@ -6,7 +6,7 @@ function [ result ] = extractDimension( input )
             u = input{x,y}(2);
             v = input{x,y}(3);
             %result(x,y) = abs(u(1)*v(2)-u(2)*v(1))*sin(90);
-            result(x,y) = sqrt((u)^2 + (v)^2);
+            result(x,y) = sqrt(u^2 + v^2);
         end
     end
 end
