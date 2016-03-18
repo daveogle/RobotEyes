@@ -1,0 +1,4 @@
+function [ map ] = ComputeDisparityMap( image1, image2 )
+    disp_map = zeros(2
+end
+
