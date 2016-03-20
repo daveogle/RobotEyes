@@ -273,9 +273,11 @@ function execute_Callback(hObject, eventdata, handles)
     right = rgb2gray(handles.rightImage);
     
     newSize =  str2num(get(handles.imgSize,'string'));
-    
-    [left, scale] = resizeToMaxDim(left, newSize);
-    [right, scale] = resizeToMaxDim(right, newSize);
+    [sizeX, sizeY] = size(left);
+    if newSize < sizeX && newSize < sizeY
+        [left, scale] = resizeToMaxDim(left, newSize);
+        [right, scale] = resizeToMaxDim(right, newSize);
+    end
     
     mode = get(handles.overallMethod,'value');
     if mode == 1
@@ -311,8 +313,14 @@ function [] = correlationWrapper(leftImg, rightImg, size, handles)
     searchWinSize = str2num(get(handles.searchWinSize,'string'));
     simMetric = get(handles.similiarityMetric, 'Value');
     searchStrat = get(handles.searchStrat, 'Value');
-    L = leftImg;
-    R = rightImg;
+    
+    if (searchStrat == 1)
+        result = ComputeDisparityMap( leftImg, rightImg, supportWinSize, searchWinSize );
+    elseif (searchStrat == 2)
+        result = GetSearchDisparityMap( leftImg, rightImg, supportWinSize, searchWinSize );
+    end
+    
+    imshow(result);
 end
 
 function [] = featureWrapper(leftImg, rightImg, size, handles)
