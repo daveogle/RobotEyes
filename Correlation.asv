@@ -1,0 +1,13 @@
+function [ result ] = Correlation( image1, image2, originPoint, searchPoints, supportSize )
+
+[searchBoundsX, searchBoundsY] = size(searchPoints);
+
+minDiff
+
+    for x = 1 : searchBoundsX
+        for y = 1 : searchBoundsY
+           diff = 
+        end
+    end
+end
+
