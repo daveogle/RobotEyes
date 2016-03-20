@@ -24,24 +24,18 @@ function [ bestL, bestR ] = cornerCorrelation(image1, image2, N, supportWinSize,
 		%if bestR(3) == -1 || bestR(3) > cost{i}(3)
 			bestR = cost{i};
             bestL = pointsL(i,:);
-            match = [bestL(1), bestL(2), bestR(2), bestR(1), cost{i}(3)];
+            match = [bestL(1), bestL(2), bestR(1), bestR(2), cost{i}(3)];
             results(i,:) = match;
         %end
     end
     results = sortrows(results,5);
     results = results(1 : N, 1 : 5);
-    
-    %DISPLAY FOR TEST
-    figure; imshow(image1); hold on;
-    for i = 1 : N
-    bLc = cornerPoints(results(1 : N, 1 : 2));
+        figure; imshow(image1); hold on;
+    bLc = cornerPoints([bestL(1),bestL(2)]);
+    bRc = cornerPoints([bestR(2), bestR(1)]); 
     plot(bLc);
-    end
     figure; imshow(image2); hold on;
-    for i = 1 : N
-    bRc = cornerPoints(results(1 : N, 3 : 4)); 
     plot(bRc);
-    end
 end
 
 function [ inRange ] = findPointsInRange(origin, points, range)
