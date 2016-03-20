@@ -16,11 +16,10 @@ function [ result ] = cornerCorrelation(image1, image2, N, supportWinSize)
 	
 	% For the N strongest corners in image 1 compare them to the corners in image 2 and find the best match
 	for i=1:strongestN.size
-		cost{i} = correlation(image1, image2, pointsL(i), pointsR, supportWinSize);
+		cost{i} = Correlation(image1, image2, pointsL(i), pointsR, supportWinSize);
 		if best(3) == -1 || best(3) > cost{i}(3)
 			best = cost{i};
 		end
-	end
-	
-	result = best;
+    end
+    result = best;
 end
