@@ -6,8 +6,7 @@ function [ results ] = cornerCorrelation(image1, image2, N, supportWinSize, sear
 	% supportWinSize the size of the support window for the correlation
 	cornersL = detectHarrisFeatures(image1);
 	cornersR = detectHarrisFeatures(image2);
-	strongestN = cornersL.selectStrongest(N*2);
-	pointsL = int32(strongestN.Location);
+	pointsL = int32(cornersL.Location);
 	pointsR = int32(cornersR.Location);
     [pointsLsize,] = size(pointsL);
     range = floor(searchWinSize/ 2);
