@@ -1,4 +1,4 @@
-function [ result ] = GetSearchDisparityMap( image1, image2, support_size, search_size, diffType )
+function [ result ] = IntegralImageDisparity( image1, image2, support_size, search_size, diffType )
     
     halfSearch =  floor(search_size / 2);
     [imageBoundX, imageBoundY,~] = size(image1);
@@ -17,9 +17,7 @@ function [ result ] = GetSearchDisparityMap( image1, image2, support_size, searc
                     end
                 end
             end
-            ii = integralImage(disp_map);
-            ii(1,:) = [];
-            ii(:,1) = [];
+            ii = calcIntegralImage(disp_map);
             for x = 1 : imageBoundX
                 for y = 1 : imageBoundY
                     if (x+i > 0 && y+j > 0) && (x+i <= imageBoundX && y+j <= imageBoundY)
@@ -34,5 +32,25 @@ function [ result ] = GetSearchDisparityMap( image1, image2, support_size, searc
         end
     end
     result = extractDimension(cost);
+end
+
+function [integralImage] = calcIntegralImage(image)
+    % Function which calculates the integral image
+    % image to generate the integral image from
+    [sizeX, sizeY] = size(image);
+    integralImage = zeros(sizeX, sizeY);
+    integralImage(1,1) = image(1,1);
+    for x=2:sizeX
+        integralImage(x,1) = integralImage(x-1, 1) + image(x, 1);
+    end
+    for y=2:sizeY
+        s = image(1,y);
+        integralImage(1,y) = integralImage(1,y-1) + s;
+        for x=2:sizeX
+            s = s + image(x,y);
+            integralImage(x,y) = integralImage(x, y-1) + s;
+        end
+    end
+
 end
 

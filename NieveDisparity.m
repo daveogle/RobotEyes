@@ -1,4 +1,4 @@
-function [ disp_map ] = ComputeDisparityMap( image1, image2, supportSize, searchWindowSize, diffType )
+function [ disp_map ] = NieveDisparity( image1, image2, supportSize, searchWindowSize, diffType )
     [imagex,imagey] = size(image1);    
     disp_map = zeros(imagex,imagey);
     

@@ -1,6 +1,7 @@
 function [ result ] = Correlation( image1, image2, originPoint, searchPoints, supportSize, diffType )
+%search all searchpoints for a correlation to originPoint
 
-[searchBoundsX,] = size(searchPoints);
+[searchBoundsX,~] = size(searchPoints);
 halfSupport = floor(supportSize /2);
 pImage1 = padarray(image1, [halfSupport halfSupport], 0, 'both');
 pImage2 = padarray(image2, [halfSupport halfSupport], 0, 'both');

@@ -6,13 +6,12 @@ function [ diff ] = SUPPORT_CMP(image1, image2, location1, location2, wsize, met
         w2 = double(w2);
                 
         if strcmp(method, 'SAD')
-            diff = sum((w1(:) - w2(:)));
+            diff = sum(abs(w1(:) - w2(:)));
         elseif strcmp(method, 'E')
-            diff = 1;%Implament
+            diff = sum(sqrt(w1(:) - w2(:).^2));
         else 
-            diff = sum( (w1(:) - w2(:)).^2 );
+            diff = sum( (w1(:) - w2(:)).^2);
         end       
-    catch E
-        3
+    catch
     end
 end

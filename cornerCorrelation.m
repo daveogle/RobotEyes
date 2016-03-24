@@ -39,8 +39,6 @@ function [ bLc, bRc ] = cornerCorrelation(image1, image2, N, supportWinSize, sea
      bRc = cornerPoints(results(1 : N, 3 : 4)); 
      %plot(bRc);
      end
-    
-    %results(:,5) = [];
 end
 
 function [ inRange ] = findPointsInRange(origin, points, range)
@@ -56,14 +54,5 @@ function [ inRange ] = findPointsInRange(origin, points, range)
     end
     if numel(inRange) == 0
         inRange = findPointsInRange(origin, points, range+5);
-    end
-end
-
-function [ row ] = findRow(toFind, findIn)
-    temp = ismember(findIn, toFind, 'rows');
-    for i=1:numel(temp)
-        if temp(i) == 1
-            row = i;
-        end
     end
 end
