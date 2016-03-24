@@ -1,10 +1,10 @@
-function [ map ] = EpipolarDisparity( image1, image2, corners, support_size, searchWinSize )
+function [ map ] = EpipolarDisparity( image1, image2, corners, support_size, searchWinSize, diffType )
 
 halfSupport = floor(support_size /2);
 halfSearch = floor(searchWinSize /2);
 [sizeX, sizeY] = size(image1);
 %compute fundemental matrix
-[matchedPoints1, matchedPoints2] = cornerCorrelation(image1, image2, corners, support_size, searchWinSize);
+[matchedPoints1, matchedPoints2] = cornerCorrelation(image1, image2, corners, support_size, searchWinSize, diffType);
 m1 = matchedPoints1.Location;
 m2 = matchedPoints2.Location;
                  
@@ -31,10 +31,6 @@ legend('Inlier points in I1', 'Inlier points in I2');
 
 %get line coords
 %get image co-ords
-coords = getImageCoords(image1);
-%find epipolar lines
-epiLines = epipolarLine(F, coords);
-points = lineToBorderPoints(epiLines, size(image1));
 results = zeros(sizeX,sizeY);
 %Show charts
 % figure;
@@ -44,21 +40,26 @@ results = zeros(sizeX,sizeY);
 % showMatchedFeatures(image1,image2,matchedPoints1,matchedPoints2,'montage','PlotOptions',{'ro','go','y--'});
 % title('Putative point matches');
 % 
-% figure;
-% subplot(121); imshow(image1);
-% title('Matched points and Epipolar Lines in First Image'); hold on;
-% plot(m1(inliers,1), m1(inliers,2), 'go')
-% epiLines = epipolarLine(F', m2(inliers, :));
-% points = lineToBorderPoints(epiLines, size(image1));
-% line(points(:, [1,3])', points(:, [2,4])');
-% 
-% subplot(122); imshow(image2);
-% title('Matched points and Epipolar Lines in Second Image'); hold on;
-% plot(m2(inliers,1), m2(inliers,2), 'go')
-% epiLines = epipolarLine(F, m1(inliers, :));
-% points = lineToBorderPoints(epiLines, size(image2));
-% line(points(:, [1,3])', points(:, [2,4])');
-% truesize;
+figure;
+subplot(121); imshow(image1);
+title('Matched points and Epipolar Lines in First Image'); hold on;
+plot(m1(inliers,1), m1(inliers,2), 'go')
+epiLines = epipolarLine(F', m2(inliers, :));
+points = lineToBorderPoints(epiLines, size(image1));
+line(points(:, [1,3])', points(:, [2,4])');
+
+subplot(122); imshow(image2);
+title('Matched points and Epipolar Lines in Second Image'); hold on;
+plot(m2(inliers,1), m2(inliers,2), 'go')
+epiLines = epipolarLine(F, m1(inliers, :));
+points = lineToBorderPoints(epiLines, size(image2));
+line(points(:, [1,3])', points(:, [2,4])');
+truesize;
+
+coords = getImageCoords(image1);
+%find epipolar lines
+epiLines = epipolarLine(F, coords);
+points = lineToBorderPoints(epiLines, size(image1));
 
 %pad images for comparison
 pImage1 = padarray(image1, [halfSupport halfSupport], 0, 'both');
@@ -74,7 +75,7 @@ for epLine = 1 : length(points);
                 if lineCoords(j,1) <= sizeY && lineCoords(j,2) <= sizeX ...
                    && lineCoords(j,1) <= coords(epLine,1) + halfSearch && lineCoords(j,2) <= coords(epLine,2) + halfSearch ...
                    && lineCoords(j,1) >= coords(epLine,1) - halfSearch && lineCoords(j,2) >= coords(epLine,2) - halfSearch
-                    cost = SUPPORT_CMP(pImage1, pImage2, [coords(epLine,2),coords(epLine,1)] + halfSupport, [lineCoords(j,2),lineCoords(j,1)] + halfSupport, halfSupport);
+                    cost = SUPPORT_CMP(pImage1, pImage2, [coords(epLine,2),coords(epLine,1)] + halfSupport, [lineCoords(j,2),lineCoords(j,1)] + halfSupport, halfSupport, diffType);
                      if best(3) == -1 || cost < best(3)
                          best = [lineCoords(j,1),lineCoords(j,2), cost];
                      end
@@ -122,11 +123,6 @@ end
 % end
 %map = resultLeft - resultRight;
 map = results;
-maxV = max(max(map));
-minV = min(min(map));
-figure;
-title('Disparity Map using Epipolar Lines');
-imshow(map, [minV maxV])
 end
 %get image co-ords
 %coords = getImageCoords(J1);

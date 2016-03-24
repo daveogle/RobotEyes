@@ -1,7 +1,7 @@
-function [ result ] = GetSearchDisparityMap( image1, image2, support_size, search_size )
+function [ result ] = GetSearchDisparityMap( image1, image2, support_size, search_size, diffType )
     
     halfSearch =  floor(search_size / 2);
-    [imageBoundX, imageBoundY,z] = size(image1);
+    [imageBoundX, imageBoundY,~] = size(image1);
     cost = cell(imageBoundX, imageBoundY);
     [cost{:}] = deal([-1,0,0]);
     minW = -halfSearch;
@@ -13,7 +13,7 @@ function [ result ] = GetSearchDisparityMap( image1, image2, support_size, searc
             for x = 1 : imageBoundX
                 for y = 1 : imageBoundY
                     if (x+i > 0 && y+j > 0) && (x+i <= imageBoundX && y+j <= imageBoundY)
-                        disp_map(x,y) = SSD(image1(x,y), image2(x+i, y+j)); 
+                        disp_map(x,y) = SUPPORT_CMP(image1, image2, [x,y], [x+i, y+j], 0, diffType);%SSD(image1(x,y), image2(x+i, y+j)); 
                     end
                 end
             end
@@ -34,6 +34,5 @@ function [ result ] = GetSearchDisparityMap( image1, image2, support_size, searc
         end
     end
     result = extractDimension(cost);
-    %imshow(result);
 end
 

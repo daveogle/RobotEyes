@@ -1,4 +1,4 @@
-function [ coords ] = PIXEL_DISP( image1, image2, support_location, support_size, search_size)
+function [ coords ] = PIXEL_DISP( image1, image2, support_location, support_size, search_size, diffType)
 %PIXEL_DISP compare depth of each pixel in a search window against the
 %given support_pixel and return a matrix of values.
 %Image 1 & 2 are the images
@@ -12,7 +12,7 @@ halfSearch =  floor(search_size / 2);
 halfSupport = floor(support_size /2);
 best_match = 99999;
 
-[imageBoundX, imageBoundY,z] = size(image1);
+[imageBoundX, imageBoundY,~] = size(image1);
 
 %compensate for padding
 support_location(1) = support_location(1) + halfSupport;
@@ -42,7 +42,7 @@ end
 for x=search_Xmin : search_Xmax
     for y =search_Ymin : search_Ymax
         %call the support window comparison
-        a = SUPPORT_CMP(image1, image2, support_location, [x, y], halfSupport);
+        a = SUPPORT_CMP(image1, image2, support_location, [x, y], halfSupport, diffType);
         if  abs(a) < abs(best_match)
             best_match = a;
             coords = [x,y];

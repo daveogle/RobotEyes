@@ -1,4 +1,4 @@
-function [ bLc, bRc ] = cornerCorrelation(image1, image2, N, supportWinSize, searchWinSize)
+function [ bLc, bRc ] = cornerCorrelation(image1, image2, N, supportWinSize, searchWinSize, diffType)
 	% Finds the best corner match between the two images
 	% image1 the first image
 	% image2 the second image
@@ -16,10 +16,10 @@ function [ bLc, bRc ] = cornerCorrelation(image1, image2, N, supportWinSize, sea
     [cost{:}] = deal([0,0,-1]);
     results = zeros(N, 5);
 	
-	% For the N strongest corners in image 1 compare them to the corners in image 2 and find the best match
+	% For the corners in image 1 compare them to the corners in image 2 and find the best match
     for i= 1 : pointsLsize
         pointsInRange = findPointsInRange(pointsL(i,:), pointsR, range);
-		cost{i} = Correlation(image1, image2, [pointsL(i,2), pointsL(i,1)], [pointsInRange(:,2),pointsInRange(:,1)], supportWinSize);
+		cost{i} = Correlation(image1, image2, [pointsL(i,2), pointsL(i,1)], [pointsInRange(:,2),pointsInRange(:,1)], supportWinSize, diffType);
         bestR = cost{i};
         bestL = pointsL(i,:);
         match = [bestL(1), bestL(2), bestR(2), bestR(1), cost{i}(3)];
