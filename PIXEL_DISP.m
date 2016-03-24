@@ -45,7 +45,7 @@ for x=search_Xmin : search_Xmax
         a = SUPPORT_CMP(image1, image2, support_location, [x, y], halfSupport, diffType);
         if  abs(a) < abs(best_match)
             best_match = a;
-            coords = [x,y];
+            coords = support_location - [x,y];
         end
     end
 end
