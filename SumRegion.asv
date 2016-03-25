@@ -1,0 +1,28 @@
+function [ cost ] = SumRegion(ii, p, r)
+if p(1) == 50
+    if p(2) == 50
+        4
+    end
+end
+    halfr = floor(r / 2);
+    [sizeX, sizeY] = size(ii);
+    corners = [[p(1) - halfr, p(2) - halfr]; ...
+        [p(1) + halfr, p(2) - halfr]; [p(1) - halfr, p(2) + halfr]; ...
+        [p(1) + halfr, p(2) + halfr]];
+    
+    for i=1:4
+        if corners(i,1) <= 0
+            corners(i,1) = 1;
+        end
+        if corners(i,2) <= 0
+            corners(i,2) = 1;
+        end
+        if corners(i,1) > sizeX
+            corners(i,1) = sizeX;
+        end
+        if corners(i,2) >sizeY
+            corners(i,2) = sizeY;
+        end
+    end
+    cost = ii(corners(1)) + ii(corners(4)) - (ii(corners(2)) + ii(corners(3)));
+end
