@@ -49,4 +49,5 @@ for x=search_Xmin : search_Xmax
         end
     end
 end
+coords = coords - halfSupport;
 end

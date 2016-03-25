@@ -10,7 +10,7 @@ function [ map ] = GetDisparityMap( image1, image2, support_size, search_size, m
 close all
 map = zeros(size(image1));
 if strcmp(method, 'ep')
-    map = EpipolarDisparity(image1, image2, 40, support_size, search_size, difference);
+    map = EpipolarDisparity(image1, image2, 100, support_size, search_size, difference);
 elseif strcmp(method, 'ii')
     map = IntegralImageDisparity(image1, image2, support_size, search_size, difference);
 elseif strcmp(method, 'n')

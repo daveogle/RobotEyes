@@ -65,11 +65,11 @@ for epLine = 1 : length(points);
                 end
             end
         end
-    end
     resultLeft = coords(epLine,:);
     resultRight = [best(1), best(2)];
     temp = resultLeft - resultRight;
     results(coords(epLine, 2), coords(epLine, 1)) = sqrt(temp(1)^2 + temp(2)^2);
+    end
 end
 map = results;
 end
